@@ -1,0 +1,206 @@
+
+<!-- Mirrored from sugsiuu.voxyyz.my.id/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 20 Jul 2025 10:40:13 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SugNatzu Panel</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    body {
+      background-color: #0f172a;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function CreatePteroPanel() {
+      const [isLoggedIn, setIsLoggedIn] = useState(false);
+      const [password, setPassword] = useState("");
+      const [nameServer, setNameServer] = useState("");
+      const [cpu, setCpu] = useState("1");
+      const [disk, setDisk] = useState("1");
+      const [result, setResult] = useState(null);
+      const [createdCount, setCreatedCount] = useState(0);
+      const [apiStatus, setApiStatus] = useState(false);
+      const [runtime, setRuntime] = useState(0);
+      const [infoOpen, setInfoOpen] = useState(false);
+      const [batteryStatus, setBatteryStatus] = useState("Checking...");
+      const [isCharging, setIsCharging] = useState(null);
+
+      const apikey = "ptla_nbVphesJSkjpEOL1d8nC13aSTkfpIvxbZi0FZgsIZJR";
+      const capikey = "ptlc_9Bz3izf1dAfC6Sihl4om6yFmvewWT3UgNNYSHU4vA3J";
+      const domain = "https://mypanel.public-void.nusantarahost.web.id/";
+
+      useEffect(() => {
+        const start = Date.now();
+        const interval = setInterval(() => {
+          setRuntime(Math.floor((Date.now() - start) / 1000));
+          setApiStatus(apikey !== "" && capikey !== "");
+        }, 1000);
+
+        // Battery info
+        if (navigator.getBattery) {
+          navigator.getBattery().then(battery => {
+            const updateBatteryInfo = () => {
+              setBatteryStatus(`${Math.round(battery.level * 100)}%`);
+              setIsCharging(battery.charging);
+            };
+            updateBatteryInfo();
+            battery.addEventListener('levelchange', updateBatteryInfo);
+            battery.addEventListener('chargingchange', updateBatteryInfo);
+          });
+        } else {
+          setBatteryStatus("Not Supported");
+          setIsCharging(null);
+        }
+
+        return () => clearInterval(interval);
+      }, []);
+
+      if (!isLoggedIn) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 to-gray-900">
+            <div className="glass p-8 rounded-2xl w-full max-w-sm shadow-2xl animate__animated animate__fadeInDown">
+              <div className="flex flex-col items-center">
+                <img src="https://files.catbox.moe/vtszi9.jpg" alt="Avatar" className="w-20 h-20 rounded-full mb-4 border-2 border-white shadow-md" />
+                <h2 className="text-3xl font-bold text-center mb-6 text-white animate__animated animate__fadeIn">Welcome Back</h2>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm text-gray-300 mb-1">Password</label>
+                <input
+                  type="password"
+                  placeholder="Masukkan password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-3 rounded-xl bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  if (password === "sugaganteng") setIsLoggedIn(true);
+                  else alert("Password salah!");
+                }}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 transition duration-200 text-white font-semibold py-3 mt-2 rounded-xl shadow-md"
+              >
+                Masuk Panel
+              </button>
+              <p className="text-xs text-center text-gray-400 mt-4">© {new Date().getFullYear()} SugNatzuCpanel</p>
+            </div>
+          </div>
+        );
+      }
+
+      const handleCreate = async () => {
+        if (!nameServer) return alert("Name server wajib diisi");
+        try {
+          const url = `https://pterodactyl-ten.vercel.app/create/pterov2?domain=${domain}&apikeyptero=${apikey}&capikeyptero=${capikey}&nameserver=${nameServer}&disk=${disk}&cpu=${cpu}`;
+          const res = await fetch(url);
+          const data = await res.json();
+          if (data.status === true || data.success === true) setCreatedCount(prev => prev + 1);
+          setResult(data);
+        } catch {
+          setResult({ status: false, message: "Error saat membuat panel" });
+        }
+      };
+
+      return (
+        <div className="flex flex-col md:flex-row min-h-screen animate__animated animate__fadeIn">
+          <div className="w-full md:w-64 bg-gray-900 p-6 flex flex-col items-center space-y-4 relative">
+            <img src="https://files.catbox.moe/vtszi9.jpg" className="rounded-full border-2 border-white w-24 h-24" alt="profile" />
+            <h1 className="font-bold text-xl text-center">SugNatzuCpanel</h1>
+            <button className="absolute top-4 left-4 text-2xl" onClick={() => setInfoOpen(!infoOpen)}>⋮</button>
+          </div>
+
+          <div className="flex-1 p-6 flex flex-col items-center">
+            <div className="w-full max-w-md">
+              <h2 className="text-2xl font-semibold mb-6 text-center">Pterodactyl Server</h2>
+              <input value={nameServer} onChange={e => setNameServer(e.target.value)} placeholder="Name Server" className="w-full mb-4 p-3 rounded bg-gray-800 text-white placeholder-gray-400 text-center" />
+
+              <div className="flex gap-4 mb-4 justify-center">
+                <select className="w-1/2 p-3 bg-gray-800 text-white rounded text-center" value={cpu} onChange={e => setCpu(e.target.value)}>
+                  {[...Array(11).keys()].map(i => <option key={i} value={i}>{i === 0 ? 'Unlimited' : `${i} CPU`}</option>)}
+                </select>
+                <select className="w-1/2 p-3 bg-gray-800 text-white rounded text-center" value={disk} onChange={e => setDisk(e.target.value)}>
+                  {[...Array(11).keys()].map(i => <option key={i} value={i}>{i === 0 ? 'Unlimited' : `${i} GB`}</option>)}
+                </select>
+              </div>
+
+              <div className="text-center">
+                <button onClick={handleCreate} className="bg-blue-600 hover:bg-blue-700 transition px-6 py-2 rounded text-white font-bold">Enter Create Panel</button>
+              </div>
+            </div>
+          </div>
+
+          {result && (
+            <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 max-w-md w-full glass p-4 rounded shadow-xl z-50 animate__animated animate__fadeInUp">
+              <h3 className="font-bold text-lg text-blue-300">Hasil Create Panel</h3>
+              <pre className="bg-black bg-opacity-20 text-green-200 text-xs mt-2 p-2 rounded overflow-auto max-h-60">{JSON.stringify(result, null, 2)}</pre>
+              <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result))} className="text-blue-400 hover:underline mt-2">📋 Copy Data</button>
+            </div>
+          )}
+
+          {infoOpen && (
+            <div className="fixed top-20 left-6 bg-gray-800 text-white p-6 rounded-lg shadow-xl text-sm space-y-2 w-72 z-50">
+              <p><strong>Status API:</strong> {apiStatus ? "✅ True" : "❌ False"}</p>
+              <p><strong>Created Panel:</strong> {createdCount}</p>
+              <div>
+                <p>
+                  <strong>Baterai:</strong> {batteryStatus}{" "}
+                  {isCharging !== null && (
+                    isCharging ? (
+                      <span className="animate__animated animate__flash animate__infinite">⚡ Charging</span>
+                    ) : (
+                      "🔋"
+                    )
+                  )}
+                </p>
+                {batteryStatus !== "Not Supported" && (
+                  <div className="w-full h-3 bg-gray-700 rounded-full mt-1">
+                    <div
+                      className={`h-3 rounded-full transition-all duration-500 ${
+                        parseInt(batteryStatus) < 20
+                          ? "bg-red-500"
+                          : parseInt(batteryStatus) < 50
+                          ? "bg-yellow-400"
+                          : "bg-green-500"
+                      }`}
+                      style={{ width: batteryStatus.replace("%", "") + "%" }}
+                    />
+                  </div>
+                )}
+              </div>
+              <p><strong>Runtime:</strong> {runtime}s</p>
+              <button className="text-red-400 text-xs hover:underline mt-2" onClick={() => setInfoOpen(false)}>❌ Tutup</button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<CreatePteroPanel />);
+  </script>
+</body>
+
+<!-- Mirrored from sugsiuu.voxyyz.my.id/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 20 Jul 2025 10:40:13 GMT -->
+</html>
+
