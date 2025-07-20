@@ -1,171 +1,26 @@
-<!DOCTYPE html><html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Panel</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #121212;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-    }
-    .hidden { display: none; }
-    .card {
-      background: #1e1e1e;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-      width: 300px;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 1rem;
-      border: none;
-      border-radius: 5px;
-    }
-    input { background: #2c2c2c; color: white; }
-    button { background: #00aaff; color: white; cursor: pointer; }
-  </style>
-</head>
-<body>
-  <div class="card" id="loginScreen">
-    <h2>Login Panel</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <p id="loginError" class="hidden" style="color: red;"></p>
-    <button id="loginBtn">Login</button>
-  </div>  <div class="card hidden" id="mainScreen">
-    <h2 id="welcomeTitle"></h2>
-    <div id="adminActions" class="hidden">
-      <h3>Tambah User Baru</h3>
-      <input type="text" id="newUser" placeholder="Username baru">
-      <input type="password" id="newPass" placeholder="Password baru">
-      <select id="newRole">
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-      </select>
-      <button id="addUser">Tambah User</button>
-      <p id="addUserResult"></p>
-    </div>
-    <div>
-      <h3>Panel Actions</h3>
-      <button onclick="alert('Create Panel Disini')">Create Panel</button>
-    </div>
-  </div>  <script>
-    const usersUrl = "https://raw.githubusercontent.com/VOID-NOT-DEV/PTERODACTYL-USER-CPANEL-WEB/refs/heads/main/users.json";
-    const githubToken = "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";
-    const loginBtn = document.getElementById("loginBtn");
-    const loginScreen = document.getElementById("loginScreen");
-    const mainScreen = document.getElementById("mainScreen");
-    const loginError = document.getElementById("loginError");
-    const welcomeTitle = document.getElementById("welcomeTitle");
-    const adminActions = document.getElementById("adminActions");
+import React, { useState, useEffect } from "react"; import usersData from "../data/users.json"; import { useRouter } from "next/router";
 
-    let currentUser = null;
+export default function Home() { const router = useRouter(); const [username, setUsername] = useState(""); const [password, setPassword] = useState(""); const [isLoggedIn, setIsLoggedIn] = useState(false); const [userType, setUserType] = useState(null); const [nameServer, setNameServer] = useState(""); const [cpu, setCpu] = useState("1"); const [disk, setDisk] = useState("1"); const [result, setResult] = useState(null); const [createdCount, setCreatedCount] = useState(0); const [infoOpen, setInfoOpen] = useState(false); const [users, setUsers] = useState(usersData); const [newUser, setNewUser] = useState({ username: "", password: "", type: "user" });
 
-    async function sendTelegramNotif(username) {
-      const telegramToken = "8150562127:AAH4mGRmIMg_WbxCnu-uMZzzK8gy7OlloNw";
-      const chatId = "7945642565";
-      const text = `👤 User *${username}* baru saja login.`;
-      await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: "Markdown" })
-      });
-    }
+const apikey = "ptla_nbVphesJSkjpEOL1d8nC13aSTkfpIvxbZi0FZgsIZJR"; const capikey = "ptlc_9Bz3izf1dAfC6Sihl4om6yFmvewWT3UgNNYSHU4vA3J"; const domain = "https://mypanel.public-void.nusantarahost.web.id";
 
-    loginBtn.addEventListener("click", async () => {
-      loginError.classList.add("hidden");
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+const handleLogin = () => { const user = users.find( (u) => u.username === username && u.password === password ); if (user) { setIsLoggedIn(true); setUserType(user.type); } else { alert("Login failed"); } };
 
-      if (!username || !password) {
-        loginError.textContent = "Username dan Password wajib diisi.";
-        loginError.classList.remove("hidden");
-        return;
-      }
+const handleCreate = async () => { if (!nameServer) return alert("Name server wajib diisi"); try { const url = https://pterodactyl-ten.vercel.app/create/pterov2?domain=${domain}&apikeyptero=${apikey}&capikeyptero=${capikey}&nameserver=${nameServer}&disk=${disk}&cpu=${cpu}; const res = await fetch(url); const data = await res.json(); if (data.status === true || data.success === true) setCreatedCount((prev) => prev + 1); setResult(data); } catch { setResult({ status: false, message: "Error saat membuat panel" }); } };
 
-      loginBtn.textContent = "Memproses...";
-      loginBtn.disabled = true;
+const handleAddUser = () => { setUsers([...users, newUser]); setNewUser({ username: "", password: "", type: "user" }); };
 
-      try {
-        const res = await fetch(usersUrl);
-        const users = await res.json();
-        const match = users.find(u => u.username === username && u.password === password);
+const handleDeleteUser = (username) => { setUsers(users.filter((user) => user.username !== username)); };
 
-        if (match) {
-          currentUser = match;
-          welcomeTitle.textContent = `Selamat datang, ${username} (${match.role})`;
-          loginScreen.classList.add("hidden");
-          mainScreen.classList.remove("hidden");
-          if (match.role === "admin") adminActions.classList.remove("hidden");
-          sendTelegramNotif(username);
-        } else {
-          loginError.textContent = "Username atau Password salah!";
-          loginError.classList.remove("hidden");
-        }
-      } catch (err) {
-        loginError.textContent = "Gagal mengambil data.";
-        loginError.classList.remove("hidden");
-        console.error(err);
-      } finally {
-        loginBtn.textContent = "Login";
-        loginBtn.disabled = false;
-      }
-    });
+if (!isLoggedIn) { return ( <div className="min-h-screen flex flex-col justify-center items-center bg-black text-white"> <h1 className="text-2xl font-bold mb-4">Login</h1> <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-2 p-2 rounded bg-gray-800" /> <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="mb-2 p-2 rounded bg-gray-800" /> <button onClick={handleLogin} className="bg-blue-600 px-4 py-2 rounded"> Login </button> </div> ); }
 
-    document.getElementById("addUser").addEventListener("click", async () => {
-      const username = document.getElementById("newUser").value.trim();
-      const password = document.getElementById("newPass").value.trim();
-      const role = document.getElementById("newRole").value;
-      const resultText = document.getElementById("addUserResult");
+if (userType === "admin") { return ( <div className="min-h-screen p-6 bg-black text-white"> <h1 className="text-2xl font-bold mb-6">Admin Panel</h1> <div className="mb-6"> <h2 className="text-lg font-semibold mb-2">Tambah User</h2> <input type="text" placeholder="Username" value={newUser.username} onChange={(e) => setNewUser({ ...newUser, username: e.target.value })} className="mr-2 p-2 rounded bg-gray-800" /> <input type="password" placeholder="Password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} className="mr-2 p-2 rounded bg-gray-800" /> <select value={newUser.type} onChange={(e) => setNewUser({ ...newUser, type: e.target.value })} className="mr-2 p-2 rounded bg-gray-800" > <option value="user">User</option> <option value="admin">Admin</option> </select> <button onClick={handleAddUser} className="bg-green-600 px-4 py-2 rounded"> Tambah </button> </div> <h2 className="text-lg font-semibold mb-2">Daftar User</h2> <ul> {users.map((u) => ( <li key={u.username} className="mb-2"> {u.username} - {u.type} <button onClick={() => handleDeleteUser(u.username)} className="ml-4 bg-red-600 px-2 py-1 rounded" > Hapus </button> </li> ))} </ul> <div className="mt-10"> <h2 className="text-lg font-semibold mb-4">Create Panel</h2> <input value={nameServer} onChange={(e) => setNameServer(e.target.value)} placeholder="Name Server" className="w-full mb-4 p-3 rounded bg-gray-800" /> <div className="flex gap-4 mb-4"> <select className="w-1/2 p-3 bg-gray-800 text-white rounded" value={cpu} onChange={(e) => setCpu(e.target.value)} > {[...Array(11).keys()].map((i) => ( <option key={i} value={i}> {i === 0 ? "Unlimited" : ${i} CPU} </option> ))} </select> <select className="w-1/2 p-3 bg-gray-800 text-white rounded" value={disk} onChange={(e) => setDisk(e.target.value)} > {[...Array(11).keys()].map((i) => ( <option key={i} value={i}> {i === 0 ? "Unlimited" : ${i} GB} </option> ))} </select> </div> <button
+onClick={handleCreate}
+className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white"
+> Enter Create Panel </button> </div> {result && ( <div className="mt-6 p-4 rounded bg-gray-800"> <h3 className="font-bold text-blue-300">Hasil Create Panel</h3> <pre className="bg-black text-green-200 text-xs mt-2 p-2 rounded"> {JSON.stringify(result, null, 2)} </pre> <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result))} className="text-blue-400 hover:underline mt-2" > 📋 Copy Data </button> </div> )} </div> ); }
 
-      if (!username || !password) return alert("Isi semua field.");
+return ( <div className="min-h-screen p-6 bg-black text-white"> <h1 className="text-2xl font-bold mb-4">Welcome User</h1> <div className="mt-10"> <h2 className="text-lg font-semibold mb-4">Create Panel</h2> <input value={nameServer} onChange={(e) => setNameServer(e.target.value)} placeholder="Name Server" className="w-full mb-4 p-3 rounded bg-gray-800" /> <div className="flex gap-4 mb-4"> <select className="w-1/2 p-3 bg-gray-800 text-white rounded" value={cpu} onChange={(e) => setCpu(e.target.value)} > {[...Array(11).keys()].map((i) => ( <option key={i} value={i}> {i === 0 ? "Unlimited" : ${i} CPU} </option> ))} </select> <select className="w-1/2 p-3 bg-gray-800 text-white rounded" value={disk} onChange={(e) => setDisk(e.target.value)} > {[...Array(11).keys()].map((i) => ( <option key={i} value={i}> {i === 0 ? "Unlimited" : ${i} GB} </option> ))} </select> </div> <button
+onClick={handleCreate}
+className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white"
+> Enter Create Panel </button> </div> {result && ( <div className="mt-6 p-4 rounded bg-gray-800"> <h3 className="font-bold text-blue-300">Hasil Create Panel</h3> <pre className="bg-black text-green-200 text-xs mt-2 p-2 rounded"> {JSON.stringify(result, null, 2)} </pre> <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result))} className="text-blue-400 hover:underline mt-2" > 📋 Copy Data </button> </div> )} </div> ); }
 
-      try {
-        const res = await fetch(usersUrl);
-        const users = await res.json();
-
-        if (users.find(u => u.username === username)) {
-          resultText.textContent = "User sudah ada.";
-          return;
-        }
-
-        users.push({ username, password, role });
-
-        const response = await fetch("https://api.github.com/repos/VOID-NOT-DEV/PTERODACTYL-USER-CPANEL-WEB/contents/users.json", {
-          method: "PUT",
-          headers: {
-            "Authorization": `token ${githubToken}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: `Tambah user ${username}`,
-            content: btoa(unescape(encodeURIComponent(JSON.stringify(users, null, 2)))),
-            sha: await getCurrentSha()
-          })
-        });
-
-        if (response.ok) {
-          resultText.textContent = `User ${username} berhasil ditambah!`;
-        } else {
-          resultText.textContent = `Gagal menambahkan user.`;
-        }
-      } catch (e) {
-        console.error(e);
-        resultText.textContent = "Gagal mengakses GitHub.";
-      }
-    });
-
-    async function getCurrentSha() {
-      const res = await fetch("https://api.github.com/repos/VOID-NOT-DEV/PTERODACTYL-USER-CPANEL-WEB/contents/users.json");
-      const data = await res.json();
-      return data.sha;
-    }
-  </script></body>
-</html>
