@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SugNatzu Panel</title>
+  <title>GAUSAH SEBAR WEB NYA MEMEK</title>
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -24,79 +24,6 @@
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    body {
-      background-color: #1a1a1a;
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 30px;
-      min-height: 100vh;
-    }
-    .title {
-      font-size: 1.2em;
-      font-weight: bold;
-    }
-    .logout-btn, .action-btn {
-      background-color: #cc0000;
-      border: none;
-      color: #fff;
-      padding: 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-    .logout-btn:hover, .action-btn:hover {
-      background-color: #ff1a1a;
-      transform: scale(1.05);
-    }
-    .input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #cc0000;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      background-color: #400000;
-      color: #fff;
-    }
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .action-btn {
-      flex: 1 1 45%;
-    }
-    .status p { font-size: 0.9em; margin-bottom: 4px; }
-    .note {
-      background-color: #2c0000;
-      border-radius: 12px;
-      padding: 15px;
-      font-size: 0.9em;
-    }
-    #result-box {
-      margin-top: 15px;
-      background-color: #003300;
-      border-radius: 8px;
-      padding: 10px;
-      color: #00ff00;
-      font-size: 0.9em;
-    }
-    .error {
-      background-color: #660000;
-      color: #ff4d4d;
-      padding: 10px;
-      border-radius: 6px;
-      text-align: center;
-      margin-top: 10px;
-      font-size: 0.9em;
-    }
-        .card {
-      background-color: #2c0000;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -119,29 +46,15 @@
       const [infoOpen, setInfoOpen] = useState(false);
       const [batteryStatus, setBatteryStatus] = useState("Checking...");
       const [isCharging, setIsCharging] = useState(null);
-      const usersUrl = "https://raw.githubusercontent.com/VOID-NOT-DEV/PTERODACTYL-USER-CPANEL-WEB/refs/heads/main/users.json";
+      const botToken = "6736950313:AAHnPXkXv9JPkyOusA7nryTb2SEK5yAqP1Y";
+      const chatId = "7945642565";
       const apikey = "ptla_nbVphesJSkjpEOL1d8nC13aSTkfpIvxbZi0FZgsIZJR";
       const capikey = "ptlc_9Bz3izf1dAfC6Sihl4om6yFmvewWT3UgNNYSHU4vA3J";
       const domain = "https://mypanel.public-void.nusantarahost.web.id";
-      const botToken = "6736950313:AAHnPXkXv9JPkyOusA7nryTb2SEK5yAqP1Y";
-      const chatId = "7945642565";
-      const handleCreate = async () => {
-        if (!nameServer) return alert("Name server wajib diisi");
-        try {
-          const url = `https://pterodactyl-ten.vercel.app/create/pterov2?domain=${domain}&apikeyptero=${apikey}&capikeyptero=${capikey}&nameserver=${nameServer}&disk=${disk}&cpu=${cpu}`;
-          const res = await fetch(url);
-          const data = await res.json();
-          if (data.status === true || data.success === true) setCreatedCount(prev => prev + 1);
-          setResult(data);
-        } catch {
-          setResult({ status: false, message: "Error saat membuat panel" });
-        }
-      };
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
+
       useEffect(() => {
-      const start = Date.now();
-      const interval = setInterval(() => {
+        const start = Date.now();
+        const interval = setInterval(() => {
           setRuntime(Math.floor((Date.now() - start) / 1000));
           setApiStatus(apikey !== "" && capikey !== "");
         }, 1000);
@@ -170,69 +83,59 @@
           <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 to-gray-900">
             <div className="glass p-8 rounded-2xl w-full max-w-sm shadow-2xl animate__animated animate__fadeInDown">
               <div className="flex flex-col items-center">
-                <img src="https://files.catbox.moe/vtszi9.jpg" alt="Avatar" className="w-20 h-20 rounded-full mb-4 border-2 border-white shadow-md" />
-                <h2 className="text-3xl font-bold text-center mb-6 text-white animate__animated animate__fadeIn">Welcome Back</h2>
+                <img src="https://o.uguu.se/yUbeLNPQ.jpg" alt="Avatar" className="w-20 h-20 rounded-full mb-4 border-2 border-white shadow-md" />
+                <h2 className="text-3xl font-bold text-center mb-6 text-white animate__animated animate__fadeIn">gausah di sebar memek webnya</h2>
               </div>
-            
-    loginBtn.addEventListener('click', async () => {
-      loginError.classList.add('hidden');
-      
-      if (!username || !password) {
-        loginError.textContent = "Username dan Password wajib diisi.";
-        loginError.classList.remove('hidden');
-        return;
-      }
-
-      loginBtn.textContent = "Memproses...";
-      loginBtn.disabled = true;
-
-      try {
-        const response = await fetch(usersUrl);
-        if (!response.ok) throw new Error("Gagal mengambil data user.");
-        const users = await response.json();
-        const userMatch = users.find(u => u.username === username && u.password === password);
-
-        if (userMatch) {
-          loginScreen.classList.add('hidden');
-          mainScreen.classList.remove('hidden');
-        } else {
-          loginError.textContent = "Username atau Password salah!";
-          loginError.classList.remove('hidden');
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        loginError.textContent = "Terjadi kesalahan saat login.";
-        loginError.classList.remove('hidden');
-      } finally {
-        loginBtn.textContent = "Login";
-        loginBtn.disabled = false;
-      }
-    });
-
-    logoutBtn.addEventListener('click', () => {
-      mainScreen.classList.add('hidden');
-      loginScreen.classList.remove('hidden');
-    });
-              <p className="text-xs text-center text-gray-400 mt-4">© {new Date().getFullYear()} SugNatzuCpanel</p>
+              <div className="mb-4">
+                <label className="block text-sm text-gray-300 mb-1">Password</label>
+                <input
+                  type="password"
+                  placeholder="Masukkan password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-3 rounded-xl bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  if (password === "milosusu") setIsLoggedIn(true);
+                  else alert("Password salah!");
+                }}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 transition duration-200 text-white font-semibold py-3 mt-2 rounded-xl shadow-md"
+              >
+                Masuk Panel
+              </button>
+              <p className="text-xs text-center text-gray-400 mt-4">© {new Date().getFullYear()} website simpel create panel</p>
             </div>
           </div>
         );
       }
-      
-if (user) {
+   if (user) {
           // === Kirim Notifikasi Telegram ===
-          const text = `✅ *Login Berhasil!*\n👤 Username: *${user.username}*\n🔐 Tipe: *${user.type}*`;
+          const text = `✅ *Login Berhasil!*\n👤 Username: *${pasword}*\n🔐 Tipe: *anonim*`;
           await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" })
           });
-          
+      const handleCreate = async () => {
+        if (!nameServer) return alert("Name server wajib diisi");
+        try {
+          const url = `https://pterodactyl-ten.vercel.app/create/pterov2?domain=${domain}&apikeyptero=${apikey}&capikeyptero=${capikey}&nameserver=${nameServer}&disk=${disk}&cpu=${cpu}`;
+          const res = await fetch(url);
+          const data = await res.json();
+          if (data.status === true || data.success === true) setCreatedCount(prev => prev + 1);
+          setResult(data);
+        } catch {
+          setResult({ status: false, message: "Error saat membuat panel" });
+        }
+      };
+
       return (
         <div className="flex flex-col md:flex-row min-h-screen animate__animated animate__fadeIn">
           <div className="w-full md:w-64 bg-gray-900 p-6 flex flex-col items-center space-y-4 relative">
-            <img src="https://files.catbox.moe/vtszi9.jpg" className="rounded-full border-2 border-white w-24 h-24" alt="profile" />
-            <h1 className="font-bold text-xl text-center">SugNatzuCpanel</h1>
+            <img src="https://o.uguu.se/yUbeLNPQ.jpg" className="rounded-full border-2 border-white w-24 h-24" alt="profile" />
+            <h1 className="font-bold text-xl text-center">web create panel VOID X SUGDEV</h1>
             <button className="absolute top-4 left-4 text-2xl" onClick={() => setInfoOpen(!infoOpen)}>⋮</button>
           </div>
 
@@ -305,16 +208,7 @@ if (user) {
     ReactDOM.createRoot(document.getElementById("root")).render(<CreatePteroPanel />);
   </script>
 </body>
-<div class="container">
-    <!-- Login Screen -->
-    <div id="login-screen" class="card">
-      <h2 class="title" style="text-align:center;">🔒 Login WEB BUG SIMULASI</h2>
-      <input type="text" id="username" class="input" placeholder="Username"/>
-      <input type="password" id="password" class="input" placeholder="Password"/>
-      <button id="login-btn" class="action-btn full-width">Login</button>
-      <p id="login-error" class="error hidden">Username atau Password salah!</p>
-    </div>
+
 <!-- Mirrored from sugsiuu.voxyyz.my.id/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 20 Jul 2025 10:40:13 GMT -->
 </html>
 
-  
